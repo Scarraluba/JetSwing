@@ -4,13 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="814cf31c-af76-4e34-b9c5-2ee6cbbd77f2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    <list default="true" id="814cf31c-af76-4e34-b9c5-2ee6cbbd77f2" name="Changes" comment="Initial Commit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/MainApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/animation/AnimationHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/core/AnimationType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/core/NavigableComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/core/NavigationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/core/NavigationEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/core/NavigationListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/AnimatablePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/AppFrame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/BottomNavigation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/Fragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/NavigationDrawer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/util/ComponentUtilities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/concrete/goonie/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -19,19 +39,49 @@
   "associatedIndex": 3
 }]]></component>
   <component name="ProjectId" id="2w8TWTPfRXNFdaQFcAYpivQWqSE" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "onboarding.tips.debug.path": "C:/Users/sphelele/IdeaProjects/JetSwing/src/main/java/concrete/goonie/Main.java"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="concrete.goonie" />
+      <recent name="concrete.goonie.util" />
+      <recent name="concrete.goonie.ui" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="concrete.goonie.Main" />
+      <module name="JetSwing" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="concrete.goonie.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -41,17 +91,19 @@
       <option name="presentableId" value="Default" />
       <updated>1745422237442</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial Commit">
+      <option name="closed" value="true" />
+      <created>1745422377947</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745422377947</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/concrete/goonie/Main.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
   </component>
 </project>

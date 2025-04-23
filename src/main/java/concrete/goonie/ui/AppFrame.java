@@ -1,0 +1,245 @@
+package concrete.goonie.ui;
+
+import concrete.goonie.animation.AnimationHelper;
+import concrete.goonie.core.AnimationType;
+import concrete.goonie.core.NavigationController;
+import concrete.goonie.core.NavigationEvent;
+import concrete.goonie.core.NavigationListener;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+public abstract class AppFrame extends JFrame implements NavigationController {
+    protected CardLayout cardLayout;
+    protected JPanel mainContainer;
+    protected JToolBar toolbar;
+    protected JPanel bottomNav;
+    protected JPanel drawer;
+    protected Stack<String> backStack = new Stack<>();
+    protected Map<String, Fragment> fragments = new HashMap<>();
+    protected NavigationListener navigationListener;
+    private AnimationType defaultAnimation = AnimationType.NONE;
+
+    public AppFrame(String title) {
+        super(title);
+        initializeUI();
+    }
+    
+    protected void initializeUI() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLayout(new BorderLayout());
+        
+        // Toolbar
+        toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        add(toolbar, BorderLayout.NORTH);
+        
+        // Main content area
+        cardLayout = new CardLayout();
+        mainContainer = new JPanel(cardLayout);
+        add(mainContainer, BorderLayout.CENTER);
+        
+        // Bottom navigation
+        bottomNav = new JPanel(new GridLayout(1, 3));
+        add(bottomNav, BorderLayout.SOUTH);
+        
+        // Drawer
+        drawer = new JPanel();
+        drawer.setPreferredSize(new Dimension(300, getHeight()));
+        drawer.setVisible(false);
+    }
+    
+    public void registerFragment(Fragment fragment) {
+        fragments.put(fragment.getDestinationId(), fragment);
+        mainContainer.add(fragment.getView(), fragment.getDestinationId());
+        fragment.setNavigationController(this);
+    }
+
+    @Override
+    public void navigateTo(String destination) {
+        navigateTo(destination, true, defaultAnimation);
+    }
+
+    @Override
+    public void navigateTo(String destination, boolean addToBackStack) {
+        navigateTo(destination, addToBackStack, defaultAnimation);
+    }
+
+    @Override
+    public void navigateTo(String destination, boolean addToBackStack, AnimationType animation) {
+        if (!fragments.containsKey(destination)) {
+            throw new IllegalArgumentException("Unknown destination: " + destination);
+        }
+
+        final Fragment newFragment = fragments.get(destination);
+        final Fragment oldFragment = backStack.isEmpty() ? null : fragments.get(backStack.peek());
+
+        if (addToBackStack) {
+            backStack.push(destination);
+        } else {
+            // For top-level navigation, replace the current stack
+            if (!backStack.isEmpty()) {
+                String current = backStack.peek();
+                if (!current.equals(destination)) {
+                    backStack.pop();
+                    backStack.push(destination);
+                }
+            } else {
+                backStack.push(destination);
+            }
+        }
+
+        Runnable completionHandler = () -> {
+            fragments.get(destination).onAttached();
+            if (navigationListener != null) {
+                navigationListener.onNavigationEvent(NavigationEvent.NAVIGATED_TO);
+            }
+        };
+
+        if (oldFragment == null || animation == AnimationType.NONE) {
+            cardLayout.show(mainContainer, destination);
+            completionHandler.run();
+
+        } else {
+            // Prepare components for animation
+            oldFragment.getView().setVisible(true);
+            newFragment.getView().setVisible(true);
+
+            // Show the new fragment behind the animation
+            cardLayout.show(mainContainer, destination);
+
+            // Animate transition
+            AnimationHelper.animateTransition(
+                    oldFragment.getView(),
+                    newFragment.getView(),
+                    animation,
+                    completionHandler
+            );
+        }
+    }
+
+    @Override
+    public void navigateBack() {
+        navigateBack(getReverseAnimation(defaultAnimation));
+    }
+
+    @Override
+    public void navigateBack(AnimationType animation) {
+        if (backStack.size() > 1) {
+            String current = backStack.pop();
+            String previous = backStack.peek();
+
+            final Fragment oldFragment = fragments.get(current);
+            final Fragment newFragment = fragments.get(previous);
+
+            Runnable completionHandler = () -> {
+                oldFragment.onDetached();
+                newFragment.onAttached();
+                if (navigationListener != null) {
+                    navigationListener.onNavigationEvent(NavigationEvent.NAVIGATED_BACK);
+                }
+            };
+
+            if (animation == AnimationType.NONE) {
+                cardLayout.show(mainContainer, previous);
+                completionHandler.run();
+            } else {
+                // Prepare components for animation
+                oldFragment.getView().setVisible(true);
+                newFragment.getView().setVisible(true);
+
+                // Show the previous fragment behind the animation
+                cardLayout.show(mainContainer, previous);
+
+                // Animate transition
+                AnimationHelper.animateTransition(
+                        oldFragment.getView(),
+                        newFragment.getView(),
+                        animation,
+                        completionHandler
+                );
+            }
+        }
+    }
+
+    private AnimationType getReverseAnimation(AnimationType animation) {
+        switch (animation) {
+            case SLIDE_LEFT: return AnimationType.SLIDE_RIGHT;
+            case SLIDE_RIGHT: return AnimationType.SLIDE_LEFT;
+            case FADE_IN: return AnimationType.FADE_OUT;
+            case FADE_OUT: return AnimationType.FADE_IN;
+            case ZOOM_IN: return AnimationType.ZOOM_OUT;
+            case ZOOM_OUT: return AnimationType.ZOOM_IN;
+            default: return AnimationType.NONE;
+        }
+    }
+
+    public void setDefaultAnimation(AnimationType animation) {
+        this.defaultAnimation = animation;
+    }
+    
+    @Override
+    public void setRoot(String destination) {
+        if (!fragments.containsKey(destination)) {
+            throw new IllegalArgumentException("Unknown destination: " + destination);
+        }
+        
+        backStack.clear();
+        backStack.push(destination);
+        cardLayout.show(mainContainer, destination);
+        fragments.get(destination).onAttached();
+        
+        if (navigationListener != null) {
+            navigationListener.onNavigationEvent(NavigationEvent.ROOT_CHANGED);
+        }
+    }
+    
+    @Override
+    public void showDrawer(boolean show) {
+        if (show) {
+            add(drawer, BorderLayout.WEST);
+        } else {
+            remove(drawer);
+        }
+        drawer.setVisible(show);
+        revalidate();
+        repaint();
+        
+        if (navigationListener != null) {
+            navigationListener.onNavigationEvent(NavigationEvent.DRAWER_TOGGLED);
+        }
+    }
+    
+    @Override
+    public void showBottomNav(boolean show) {
+        bottomNav.setVisible(show);
+    }
+    
+    @Override
+    public void showToolbar(boolean show) {
+        toolbar.setVisible(show);
+    }
+    
+    @Override
+    public void setToolbarTitle(String title) {
+        // Remove existing title components
+        for (Component c : toolbar.getComponents()) {
+            if (c instanceof JLabel) {
+                toolbar.remove(c);
+            }
+        }
+        
+        toolbar.add(new JLabel(title));
+        toolbar.revalidate();
+        toolbar.repaint();
+    }
+    
+    @Override
+    public void setNavigationListener(NavigationListener listener) {
+        this.navigationListener = listener;
+    }
+}
