@@ -25,11 +25,17 @@ public class Main  extends AppFrame {
         setupNavigationDrawer();
         setupToolbar();
         
-        // Set initial state
+       //  Set initial state
         setRoot("home");
         setToolbarTitle("Home");
         showBottomNav(true);
         showToolbar(true);
+
+        toolbar.setBackgroundColor(new Color(50, 50, 50));
+        toolbar.setForegroundColor(Color.WHITE);
+
+        // Set menu button action
+        setToolbarMenuAction(e -> showDrawer(!drawer.isVisible()));
     }
 
     private void setupBottomNavigation() {
@@ -83,7 +89,8 @@ public class Main  extends AppFrame {
 
     class HomeFragment extends Fragment {
         public HomeFragment() {
-            setLayout(new BorderLayout(10, 10));
+          setOpaque(true);
+          setLayout(new BorderLayout(10, 10));
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             // Header

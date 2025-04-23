@@ -8,14 +8,15 @@ import concrete.goonie.core.NavigationListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
 public abstract class AppFrame extends JFrame implements NavigationController {
     protected CardLayout cardLayout;
-    protected JPanel mainContainer;
-    protected JToolBar toolbar;
+    protected Panel mainContainer;
+    protected Toolbar toolbar;
     protected JPanel bottomNav;
     protected JPanel drawer;
     protected Stack<String> backStack = new Stack<>();
@@ -27,32 +28,33 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         super(title);
         initializeUI();
     }
-    
+
     protected void initializeUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLayout(new BorderLayout());
-        
+
         // Toolbar
-        toolbar = new JToolBar();
-        toolbar.setFloatable(false);
+        toolbar = new Toolbar();
+        toolbar.setBackButtonListener(e -> navigateBack());
         add(toolbar, BorderLayout.NORTH);
-        
+
         // Main content area
         cardLayout = new CardLayout();
-        mainContainer = new JPanel(cardLayout);
+        mainContainer = new Panel(cardLayout);
         add(mainContainer, BorderLayout.CENTER);
-        
+        mainContainer.enableGradientBackground(true);
+
         // Bottom navigation
         bottomNav = new JPanel(new GridLayout(1, 3));
         add(bottomNav, BorderLayout.SOUTH);
-        
-        // Drawer
+
+        //  Drawer
         drawer = new JPanel();
         drawer.setPreferredSize(new Dimension(300, getHeight()));
         drawer.setVisible(false);
     }
-    
+
     public void registerFragment(Fragment fragment) {
         fragments.put(fragment.getDestinationId(), fragment);
         mainContainer.add(fragment.getView(), fragment.getDestinationId());
@@ -95,11 +97,11 @@ public abstract class AppFrame extends JFrame implements NavigationController {
 
         Runnable completionHandler = () -> {
             fragments.get(destination).onAttached();
+            updateToolbarForFragment(destination);
             if (navigationListener != null) {
                 navigationListener.onNavigationEvent(NavigationEvent.NAVIGATED_TO);
             }
         };
-
         if (oldFragment == null || animation == AnimationType.NONE) {
             cardLayout.show(mainContainer, destination);
             completionHandler.run();
@@ -139,6 +141,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
             Runnable completionHandler = () -> {
                 oldFragment.onDetached();
                 newFragment.onAttached();
+                updateToolbarForFragment(previous);
                 if (navigationListener != null) {
                     navigationListener.onNavigationEvent(NavigationEvent.NAVIGATED_BACK);
                 }
@@ -168,36 +171,43 @@ public abstract class AppFrame extends JFrame implements NavigationController {
 
     private AnimationType getReverseAnimation(AnimationType animation) {
         switch (animation) {
-            case SLIDE_LEFT: return AnimationType.SLIDE_RIGHT;
-            case SLIDE_RIGHT: return AnimationType.SLIDE_LEFT;
-            case FADE_IN: return AnimationType.FADE_OUT;
-            case FADE_OUT: return AnimationType.FADE_IN;
-            case ZOOM_IN: return AnimationType.ZOOM_OUT;
-            case ZOOM_OUT: return AnimationType.ZOOM_IN;
-            default: return AnimationType.NONE;
+            case SLIDE_LEFT:
+                return AnimationType.SLIDE_RIGHT;
+            case SLIDE_RIGHT:
+                return AnimationType.SLIDE_LEFT;
+            case FADE_IN:
+                return AnimationType.FADE_OUT;
+            case FADE_OUT:
+                return AnimationType.FADE_IN;
+            case ZOOM_IN:
+                return AnimationType.ZOOM_OUT;
+            case ZOOM_OUT:
+                return AnimationType.ZOOM_IN;
+            default:
+                return AnimationType.NONE;
         }
     }
 
     public void setDefaultAnimation(AnimationType animation) {
         this.defaultAnimation = animation;
     }
-    
+
     @Override
     public void setRoot(String destination) {
         if (!fragments.containsKey(destination)) {
             throw new IllegalArgumentException("Unknown destination: " + destination);
         }
-        
+
         backStack.clear();
         backStack.push(destination);
         cardLayout.show(mainContainer, destination);
         fragments.get(destination).onAttached();
-        
+
         if (navigationListener != null) {
             navigationListener.onNavigationEvent(NavigationEvent.ROOT_CHANGED);
         }
     }
-    
+
     @Override
     public void showDrawer(boolean show) {
         if (show) {
@@ -208,38 +218,50 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         drawer.setVisible(show);
         revalidate();
         repaint();
-        
+
         if (navigationListener != null) {
             navigationListener.onNavigationEvent(NavigationEvent.DRAWER_TOGGLED);
         }
     }
-    
+
     @Override
     public void showBottomNav(boolean show) {
         bottomNav.setVisible(show);
     }
-    
+
     @Override
     public void showToolbar(boolean show) {
         toolbar.setVisible(show);
     }
-    
+
     @Override
     public void setToolbarTitle(String title) {
-        // Remove existing title components
-        for (Component c : toolbar.getComponents()) {
-            if (c instanceof JLabel) {
-                toolbar.remove(c);
-            }
-        }
-        
-        toolbar.add(new JLabel(title));
-        toolbar.revalidate();
-        toolbar.repaint();
+        toolbar.setTitle(title);
     }
-    
+
+    public void setToolbarMenuAction(ActionListener action) {
+        toolbar.setMenuButtonListener(action);
+    }
+
+    public void updateToolbarForFragment(String fragmentId) {
+        if (backStack.size() > 1) {
+            toolbar.showBackButton(true);
+        } else {
+            toolbar.showBackButton(false);
+        }
+
+        // You can add fragment-specific toolbar customization here
+        if ("home".equals(fragmentId)) {
+            toolbar.setTitle("Home");
+        } else if ("profile".equals(fragmentId)) {
+            toolbar.setTitle("Profile");
+        }
+        // ... other fragment cases ...
+    }
+
     @Override
     public void setNavigationListener(NavigationListener listener) {
         this.navigationListener = listener;
     }
+
 }
