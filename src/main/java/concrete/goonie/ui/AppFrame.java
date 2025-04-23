@@ -27,6 +27,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     protected NavigationListener navigationListener;
 
     private AnimationType defaultAnimation = AnimationType.NONE;
+    private JPanel rootPanel;
 
 
     public AppFrame(String title) {
@@ -39,26 +40,50 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         setSize(800, 600);
         setLayout(new BorderLayout());
 
-        // Toolbar
-        toolbar = new Toolbar();
-        toolbar.setBackButtonListener(e -> navigateBack());
-        add(toolbar, BorderLayout.NORTH);
+        // Create root panel that will contain everything
+        rootPanel = new JPanel(new BorderLayout());
+        add(rootPanel, BorderLayout.CENTER);
 
-        // Main content area
+        // Initialize main container with CardLayout
         cardLayout = new CardLayout();
         mainContainer = new Panel(cardLayout);
-        add(mainContainer, BorderLayout.CENTER);
         mainContainer.enableGradientBackground(true);
+
+        // Create a wrapper panel for main content + toolbar
+        JPanel contentWrapper = new JPanel(new BorderLayout());
+
+        // Add toolbar to the wrapper (not directly to mainContainer)
+        toolbar = new Toolbar();
+        toolbar.setBackButtonListener(e -> navigateBack());
+        contentWrapper.add(toolbar, BorderLayout.NORTH);
+
+        // Add main container to wrapper
+        contentWrapper.add(mainContainer, BorderLayout.CENTER);
+
+        // Add wrapper to root panel
+        rootPanel.add(contentWrapper, BorderLayout.CENTER);
+
+        // Initialize side panels (initially empty and hidden)
+        leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(200, getHeight()));
+        leftPanel.setVisible(false);
+        rootPanel.add(leftPanel, BorderLayout.WEST);
+
+        rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(200, getHeight()));
+        rightPanel.setVisible(false);
+        rootPanel.add(rightPanel, BorderLayout.EAST);
 
         // Bottom navigation
         bottomNav = new JPanel(new GridLayout(1, 3));
         add(bottomNav, BorderLayout.SOUTH);
 
-        //  Drawer
+        // Drawer
         drawer = new JPanel();
         drawer.setPreferredSize(new Dimension(300, getHeight()));
         drawer.setVisible(false);
     }
+
 
     public void registerFragment(Fragment fragment) {
         fragments.put(fragment.getDestinationId(), fragment);
@@ -267,18 +292,18 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     public void setToolbar(Toolbar customToolbar) {
         // Remove existing toolbar
         if (this.toolbar != null) {
-            remove(this.toolbar);
+            mainContainer.remove(this.toolbar);
         }
 
         if (customToolbar == null) {
             // Restore default toolbar
             this.toolbar = new Toolbar();
             this.toolbar.setBackButtonListener(e -> navigateBack());
-            add(this.toolbar, BorderLayout.NORTH);
+            mainContainer.add(this.toolbar, BorderLayout.NORTH);
         } else {
             // Use custom toolbar
             this.toolbar = customToolbar;
-            add(this.toolbar, BorderLayout.NORTH);
+            mainContainer. add(this.toolbar, BorderLayout.NORTH);
         }
 
         // Update toolbar state for current fragment
