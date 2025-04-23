@@ -256,9 +256,33 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         } else if ("profile".equals(fragmentId)) {
             toolbar.setTitle("Profile");
         }
-        // ... other fragment cases ...
-    }
 
+    }
+    public void setToolbar(Toolbar customToolbar) {
+        // Remove existing toolbar
+        if (this.toolbar != null) {
+            remove(this.toolbar);
+        }
+
+        if (customToolbar == null) {
+            // Restore default toolbar
+            this.toolbar = new Toolbar();
+            this.toolbar.setBackButtonListener(e -> navigateBack());
+            add(this.toolbar, BorderLayout.NORTH);
+        } else {
+            // Use custom toolbar
+            this.toolbar = customToolbar;
+            add(this.toolbar, BorderLayout.NORTH);
+        }
+
+        // Update toolbar state for current fragment
+        if (!backStack.isEmpty()) {
+            updateToolbarForFragment(backStack.peek());
+        }
+
+        revalidate();
+        repaint();
+    }
     @Override
     public void setNavigationListener(NavigationListener listener) {
         this.navigationListener = listener;
