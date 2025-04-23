@@ -39,42 +39,22 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         setSize(800, 600);
         setLayout(new BorderLayout());
 
-        // Create main content structure
-        JPanel rootPanel = new JPanel(new BorderLayout());
-
-        // Left panel (optional)
-        leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(200, getHeight()));
-        leftPanel.setVisible(false);
-        rootPanel.add(leftPanel, BorderLayout.WEST);
-
-        // Center panel (main content)
-        centerPanel = new JPanel(new BorderLayout());
-        cardLayout = new CardLayout();
-        mainContainer = new Panel(cardLayout);
-        mainContainer.enableGradientBackground(true);
-        centerPanel.add(mainContainer, BorderLayout.CENTER);
-        rootPanel.add(centerPanel, BorderLayout.CENTER);
-
-        // Right panel (optional)
-        rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(200, getHeight()));
-        rightPanel.setVisible(false);
-        rootPanel.add(rightPanel, BorderLayout.EAST);
-
-        // Add root panel to frame
-        add(rootPanel, BorderLayout.CENTER);
-
         // Toolbar
         toolbar = new Toolbar();
         toolbar.setBackButtonListener(e -> navigateBack());
         add(toolbar, BorderLayout.NORTH);
 
+        // Main content area
+        cardLayout = new CardLayout();
+        mainContainer = new Panel(cardLayout);
+        add(mainContainer, BorderLayout.CENTER);
+        mainContainer.enableGradientBackground(true);
+
         // Bottom navigation
         bottomNav = new JPanel(new GridLayout(1, 3));
         add(bottomNav, BorderLayout.SOUTH);
 
-        // Drawer
+        //  Drawer
         drawer = new JPanel();
         drawer.setPreferredSize(new Dimension(300, getHeight()));
         drawer.setVisible(false);
