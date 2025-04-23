@@ -8,14 +8,14 @@ import javax.swing.*;
 public abstract class Fragment extends AnimatablePanel implements NavigableComponent {
     protected NavigationController navigationController;
 
-    private final String title;
+    private final String destinationId;
 
     public Fragment() {
-        this.title = "";
+        this.destinationId = "";
     }
 
-    protected Fragment(String title) {
-        this.title = title;
+    protected Fragment(String destinationId) {
+        this.destinationId = destinationId;
     }
 
     @Override
@@ -30,7 +30,7 @@ public abstract class Fragment extends AnimatablePanel implements NavigableCompo
 
     @Override
     public String getDestinationId() {
-        return title.isEmpty() ? getClass().getSimpleName() : title;
+        return destinationId.isEmpty() ? getClass().getSimpleName() : destinationId;
     }
 
 
