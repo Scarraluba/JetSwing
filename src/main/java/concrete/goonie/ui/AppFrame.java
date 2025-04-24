@@ -15,20 +15,24 @@ import java.util.Stack;
 
 public abstract class AppFrame extends JFrame implements NavigationController {
     protected CardLayout cardLayout;
-    protected Panel rootPanel;
+    protected JPanel rootPanel;
     protected Toolbar toolbar;
     protected JPanel bottomNav;
     protected JPanel drawer;
     protected JComponent leftPanel;
     protected JComponent rightPanel;
     private JPanel mainContainer;
+    private JPanel innerContainer;
     protected Stack<String> backStack = new Stack<>();
     protected Map<String, Fragment> fragments = new HashMap<>();
     protected NavigationListener navigationListener;
 
     private AnimationType defaultAnimation = AnimationType.NONE;
     private JPanel overlayPanel;
-
+    private int left = 0;
+    private int top = 0;
+    private int bottom = 0;
+    private int right = 0;
 
     public AppFrame(String title) {
         super(title);
@@ -39,21 +43,30 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
 
-        JLayeredPane layeredPane = new JLayeredPane();
+        Panel layeredPane = new Panel(null);
         layeredPane.setLayout(null);
         setContentPane(layeredPane);
+        layeredPane.enableGradientBackground(true);
 
         // Main root panel that holds the UI
-        rootPanel = new Panel(new BorderLayout());
-        rootPanel.enableGradientBackground(true);
+        rootPanel = new JPanel(new BorderLayout());
+
+        rootPanel.setOpaque(false);
         rootPanel.setBounds(0, 0, getWidth(), getHeight());
         layeredPane.add(rootPanel, JLayeredPane.DEFAULT_LAYER);
+
+        innerContainer = new JPanel(new BorderLayout());
+        innerContainer.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+        innerContainer.setOpaque(false);
+        rootPanel.add(innerContainer, BorderLayout.CENTER);
 
         // Card layout container
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
         mainContainer.setOpaque(false);
-        rootPanel.add(mainContainer, BorderLayout.CENTER);
+        innerContainer.add(mainContainer, BorderLayout.CENTER);
+
+        // rootPanel.add(mainContainer, BorderLayout.CENTER);
 
         // Toolbar
         toolbar = new Toolbar();
@@ -99,6 +112,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
                 rootPanel.repaint();
             }
         });
+
     }
 
 
@@ -174,12 +188,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
             cardLayout.show(mainContainer, destination);
 
             // Animate transition
-            AnimationHelper.animateTransition(
-                    oldFragment.getView(),
-                    newFragment.getView(),
-                    animation,
-                    completionHandler
-            );
+            AnimationHelper.animateTransition(oldFragment.getView(), newFragment.getView(), animation, completionHandler);
         }
     }
 
@@ -218,12 +227,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
                 cardLayout.show(mainContainer, previous);
 
                 // Animate transition
-                AnimationHelper.animateTransition(
-                        oldFragment.getView(),
-                        newFragment.getView(),
-                        animation,
-                        completionHandler
-                );
+                AnimationHelper.animateTransition(oldFragment.getView(), newFragment.getView(), animation, completionHandler);
             }
         }
     }
@@ -352,25 +356,56 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     public void setLeftComponent(JComponent component) {
         if (leftPanel != null) {
             removeLeftComponent();
-            leftPanel = component;
-            mainContainer.add(component, BorderLayout.WEST);
         }
+        leftPanel = component;
+        innerContainer.add(component, BorderLayout.WEST);
     }
 
     public void setRightComponent(JComponent component) {
         if (rightPanel != null) {
             removeRightComponent();
             rightPanel = component;
-            mainContainer.add(component, BorderLayout.EAST);
+            innerContainer.add(component, BorderLayout.EAST);
         }
     }
 
     public void removeLeftComponent() {
-        mainContainer.remove(leftPanel);
+        innerContainer.remove(leftPanel);
     }
 
     public void removeRightComponent() {
-        mainContainer.remove(rightPanel);
+        innerContainer.remove(rightPanel);
     }
 
+    public void setPadding(int top, int left, int bottom, int right) {
+        this.top = top;
+        this.left = left;
+        this.bottom = bottom;
+        this.right = right;
+        updateRootPadding();
+    }
+
+    public void setTop(int top) {
+        this.top = top;
+        updateRootPadding();
+    }
+
+    public void setLeft(int left) {
+        this.left = left;
+        updateRootPadding();
+    }
+
+    public void setBottom(int bottom) {
+        this.bottom = bottom;
+        updateRootPadding();
+    }
+
+    public void setRight(int right) {
+        this.right = right;
+        updateRootPadding();
+    }
+
+    private void updateRootPadding() {
+        rootPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+    }
 }

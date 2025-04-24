@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="814cf31c-af76-4e34-b9c5-2ee6cbbd77f2" name="Changes" comment="Initial Commit">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/home.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/img.png" afterDir="false" />
+    <list default="true" id="814cf31c-af76-4e34-b9c5-2ee6cbbd77f2" name="Changes" comment="Fix Component cast">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/Toolbar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/Toolbar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/concrete/goonie/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/AppFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/Panel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/concrete/goonie/ui/Panel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/home.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745498334303</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Fix Component cast">
+      <option name="closed" value="true" />
+      <created>1745499400144</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1745499400144</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -206,6 +215,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+    <MESSAGE value="Fix Component cast" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix Component cast" />
   </component>
 </project>

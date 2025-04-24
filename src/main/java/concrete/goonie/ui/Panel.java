@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Panel extends JPanel {
+public class Panel extends JLayeredPane {
 
     private List<GradientSettings> gradients = new ArrayList<>();
     private boolean gradientsEnabled = false;
 
-    public Panel(LayoutManager layoutManager) {
-        super(layoutManager);
-        gradients.add(new GradientSettings(new Color(0, 153, 204, 108), new Color(10, 10, 10, 108), new float[]{0.0f, 0.8f}, 0.15f, 2.5f));
-        gradients.add(new GradientSettings(new Color(255, 255, 255, 98), new Color(0, 0, 0, 98), new float[]{0.0f, 0.8f}, 0.41f, 3f));
-        gradients.add(new GradientSettings(new Color(204, 0, 0, 111), new Color(10, 10, 10, 111), new float[]{0.0f, 0.8f}, 0.78f, 2.5f));
+    public Panel(List<GradientSettings> gradients) {
+        //  super(layoutManager);
+        this.gradients.add(new GradientSettings(new Color(0, 153, 204, 108), new Color(10, 10, 10, 108), new float[]{0.0f, 0.8f}, 0.15f, 2.5f));
+        this.gradients.add(new GradientSettings(new Color(255, 255, 255, 98), new Color(0, 0, 0, 98), new float[]{0.0f, 0.8f}, 0.41f, 3f));
+        this.gradients.add(new GradientSettings(new Color(204, 0, 0, 111), new Color(10, 10, 10, 111), new float[]{0.0f, 0.8f}, 0.78f, 2.5f));
     }
 
     // Gradient background methods

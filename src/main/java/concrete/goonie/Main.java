@@ -12,29 +12,29 @@ import java.awt.*;
 public class Main  extends AppFrame {
     public Main () {
         super("Full-Stack Navigation Demo");
-        //setDefaultAnimation(AnimationType.SLIDE_RIGHT);
-        // Create and register all fragments
-        registerFragment(new HomeFragment());
-        registerFragment(new SearchFragment());
-        registerFragment(new ProfileFragment());
-        registerFragment(new DetailsFragment());
-        registerFragment(new NotificationsFragment());
-
-        // Set up navigation components
+//        //setDefaultAnimation(AnimationType.SLIDE_RIGHT);
+//        // Create and register all fragments
+//        registerFragment(new HomeFragment());
+//        registerFragment(new SearchFragment());
+//        registerFragment(new ProfileFragment());
+//        registerFragment(new DetailsFragment());
+//        registerFragment(new NotificationsFragment());
+//
+//        // Set up navigation components
          setupBottomNavigation();
-        setupNavigationDrawer();
-        setupToolbar();
-
-       //  Set initial state
-        setRoot("home");
-        setToolbarTitle("Home");
-        showBottomNav(true);
-        showToolbar(true);
-
-        toolbar.setBackgroundColor(new Color(50, 50, 50));
-        toolbar.setForegroundColor(Color.WHITE);
-
-        // Set menu button action
+//        setupNavigationDrawer();
+//        setupToolbar();
+//
+//       //  Set initial state
+//        setRoot("home");
+//        setToolbarTitle("Home");
+//        showBottomNav(true);
+//        showToolbar(true);
+//
+//        toolbar.setBackgroundColor(new Color(50, 50, 50));
+//        toolbar.setForegroundColor(Color.WHITE);
+//
+//        // Set menu button action
         setToolbarMenuAction(e -> showDrawer(!drawer.isVisible()));
     }
 
