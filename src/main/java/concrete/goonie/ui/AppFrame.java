@@ -232,11 +232,11 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     @Override
     public void showDrawer(boolean show) {
         if (show) {
-            add(drawer, BorderLayout.WEST);
+            add(drawer);
         } else {
             remove(drawer);
         }
-        drawer.setVisible(show);
+        drawer.setVisible(true);
         revalidate();
         repaint();
 
@@ -283,18 +283,18 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     public void setToolbar(Toolbar customToolbar) {
         // Remove existing toolbar
         if (this.toolbar != null) {
-            mainContainer.remove(this.toolbar);
+            rootPanel.remove(this.toolbar);
         }
 
         if (customToolbar == null) {
             // Restore default toolbar
             this.toolbar = new Toolbar();
             this.toolbar.setBackButtonListener(e -> navigateBack());
-            mainContainer.add(this.toolbar, BorderLayout.NORTH);
+            rootPanel.add(this.toolbar, BorderLayout.NORTH);
         } else {
             // Use custom toolbar
             this.toolbar = customToolbar;
-            mainContainer.add(this.toolbar, BorderLayout.NORTH);
+            rootPanel.add(this.toolbar, BorderLayout.NORTH);
         }
 
         // Update toolbar state for current fragment
