@@ -19,8 +19,8 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     protected Toolbar toolbar;
     protected JPanel bottomNav;
     protected JPanel drawer;
-    protected JPanel leftPanel;
-    protected JPanel rightPanel;
+    protected JComponent leftPanel;
+    protected JComponent rightPanel;
     private JPanel mainContainer;
     protected Stack<String> backStack = new Stack<>();
     protected Map<String, Fragment> fragments = new HashMap<>();
@@ -112,7 +112,6 @@ public abstract class AppFrame extends JFrame implements NavigationController {
         drawer.setVisible(false);
         overlayPanel.setVisible(false);
     }
-
 
 
     public void registerFragment(Fragment fragment) {
@@ -351,13 +350,19 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     }
 
     public void setLeftComponent(JComponent component) {
-        leftPanel = (JPanel) component;
-        mainContainer.add(component, BorderLayout.WEST);
+        if (leftPanel != null) {
+            removeLeftComponent();
+            leftPanel = component;
+            mainContainer.add(component, BorderLayout.WEST);
+        }
     }
 
     public void setRightComponent(JComponent component) {
-        rightPanel = (JPanel) component;
-        mainContainer.add(component, BorderLayout.EAST);
+        if (rightPanel != null) {
+            removeRightComponent();
+            rightPanel = component;
+            mainContainer.add(component, BorderLayout.EAST);
+        }
     }
 
     public void removeLeftComponent() {
