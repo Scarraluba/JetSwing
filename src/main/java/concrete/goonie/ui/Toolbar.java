@@ -1,6 +1,7 @@
 package concrete.goonie.ui;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -13,6 +14,7 @@ public class Toolbar extends JToolBar {
         setFloatable(false);
         setLayout(new BorderLayout());
         setOpaque(false);
+
         // Back button (initially hidden)
         backButton = new JButton("←");
         backButton.setVisible(false);
@@ -62,5 +64,10 @@ public class Toolbar extends JToolBar {
         backButton.setForeground(color);
         menuButton.setForeground(color);
         titleLabel.setForeground(color);
+    }
+
+    @Override
+    public Border getBorder() {
+        return null;
     }
 }

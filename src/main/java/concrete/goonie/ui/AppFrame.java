@@ -8,7 +8,7 @@ import concrete.goonie.core.NavigationListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -27,6 +27,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     protected NavigationListener navigationListener;
 
     private AnimationType defaultAnimation = AnimationType.NONE;
+    private JPanel overlayPanel;
 
 
     public AppFrame(String title) {
@@ -37,44 +38,81 @@ public abstract class AppFrame extends JFrame implements NavigationController {
     protected void initializeUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
-        setLayout(new BorderLayout());
 
-//        // Create root panel that will contain everything
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setLayout(null);
+        setContentPane(layeredPane);
+
+        // Main root panel that holds the UI
         rootPanel = new Panel(new BorderLayout());
         rootPanel.enableGradientBackground(true);
-        add(rootPanel, BorderLayout.CENTER);
-//
-//        // Initialize main container with CardLayout
+        rootPanel.setBounds(0, 0, getWidth(), getHeight());
+        layeredPane.add(rootPanel, JLayeredPane.DEFAULT_LAYER);
+
+        // Card layout container
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
         mainContainer.setOpaque(false);
         rootPanel.add(mainContainer, BorderLayout.CENTER);
 
+        // Toolbar
         toolbar = new Toolbar();
         toolbar.setBackButtonListener(e -> navigateBack());
         rootPanel.add(toolbar, BorderLayout.NORTH);
 
-//        // Initialize side panels (initially empty and hidden)
-        leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(200, getHeight()));
-        leftPanel.setVisible(false);
-        rootPanel.add(leftPanel, BorderLayout.WEST);
-//
-        rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(200, getHeight()));
-        rightPanel.setVisible(false);
-        rootPanel.add(rightPanel, BorderLayout.EAST);
-//
-//        // Bottom navigation
+        // Bottom nav
         bottomNav = new JPanel(new GridLayout(1, 3));
         rootPanel.add(bottomNav, BorderLayout.SOUTH);
 
-//
-//        // Drawer
+        // Drawer panel
         drawer = new JPanel();
-        drawer.setPreferredSize(new Dimension(300, getHeight()));
+        drawer.setBackground(new Color(0, 0, 0, 180)); // semi-transparent
+        drawer.setBounds(0, 0, 300, getHeight());
         drawer.setVisible(false);
+        layeredPane.add(drawer, JLayeredPane.PALETTE_LAYER);
+
+        // Overlay panel for background clicks
+        overlayPanel = new JPanel();
+        overlayPanel.setOpaque(false); // transparent
+        overlayPanel.setBounds(0, 0, getWidth(), getHeight());
+        overlayPanel.setVisible(false);
+        overlayPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                hideDrawer();
+            }
+        });
+        layeredPane.add(overlayPanel, JLayeredPane.MODAL_LAYER);
+
+        // Resize components when window resizes
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int width = layeredPane.getWidth();
+                int height = layeredPane.getHeight();
+
+                rootPanel.setBounds(0, 0, width, height);
+                drawer.setBounds(0, 0, 300, height);
+                overlayPanel.setBounds(0, 0, width, height);
+
+                rootPanel.revalidate();
+                rootPanel.repaint();
+            }
+        });
     }
+
+
+    private void showDrawer() {
+        drawer.setVisible(true);
+        overlayPanel.setVisible(true);
+        overlayPanel.repaint();
+    }
+
+    private void hideDrawer() {
+        drawer.setVisible(false);
+        overlayPanel.setVisible(false);
+    }
+
 
 
     public void registerFragment(Fragment fragment) {
@@ -232,12 +270,12 @@ public abstract class AppFrame extends JFrame implements NavigationController {
 
     @Override
     public void showDrawer(boolean show) {
-        if (show) {
-            add(drawer);
+        if (!show) {
+            hideDrawer();
         } else {
-            remove(drawer);
+            showDrawer();
         }
-        drawer.setVisible(true);
+
         revalidate();
         repaint();
 

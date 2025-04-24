@@ -52,7 +52,8 @@ public class Main  extends AppFrame {
         
         // Add drawer toggle button to toolbar
         JButton menuButton = new JButton("☰");
-        //menuButton.addActionListener(e -> showDrawer(!drawer.isVisible()));
+
+      //  menuButton.addActionListener(e -> showDrawer(!d ));
         toolbar.add(menuButton, 0); // Add at beginning of toolbar
     }
     
