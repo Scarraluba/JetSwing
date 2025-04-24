@@ -19,12 +19,12 @@ public class Main  extends AppFrame {
         registerFragment(new ProfileFragment());
         registerFragment(new DetailsFragment());
         registerFragment(new NotificationsFragment());
-        
+
         // Set up navigation components
-        setupBottomNavigation();
+         setupBottomNavigation();
         setupNavigationDrawer();
         setupToolbar();
-        
+
        //  Set initial state
         setRoot("home");
         setToolbarTitle("Home");
@@ -40,7 +40,10 @@ public class Main  extends AppFrame {
 
     private void setupBottomNavigation() {
         BottomNavigation bottomNav = new BottomNavigation(this);
+        this.bottomNav.removeAll(); // Clear existing components
         this.bottomNav.add(bottomNav.getView());
+        this.bottomNav.revalidate();
+        this.bottomNav.repaint();
     }
     
     private void setupNavigationDrawer() {

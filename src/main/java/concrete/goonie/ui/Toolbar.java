@@ -12,7 +12,7 @@ public class Toolbar extends JToolBar {
     public Toolbar() {
         setFloatable(false);
         setLayout(new BorderLayout());
-        
+        setOpaque(false);
         // Back button (initially hidden)
         backButton = new JButton("←");
         backButton.setVisible(false);

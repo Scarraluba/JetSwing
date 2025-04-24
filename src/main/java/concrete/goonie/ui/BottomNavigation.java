@@ -25,7 +25,7 @@ public class BottomNavigation {
         button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.addActionListener(e -> {
             // For bottom nav items, don't add to back stack
-            controller.navigateTo(destination, false, AnimationType.FADE_IN);
+            controller.navigateTo(destination, false);
         });
         navPanel.add(button);
     }
