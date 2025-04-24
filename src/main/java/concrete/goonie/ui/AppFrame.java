@@ -47,6 +47,7 @@ public abstract class AppFrame extends JFrame implements NavigationController {
 //        // Initialize main container with CardLayout
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
+        mainContainer.setOpaque(false);
         rootPanel.add(mainContainer, BorderLayout.CENTER);
 
         toolbar = new Toolbar();
